@@ -1,0 +1,40 @@
+# =============================================================================
+#  AI Research Copilot — Python dependencies
+#  Python 3.11+ required (developed on 3.14)
+#  Install: pip install -r requirements.txt
+#  Optional heavy deps (faiss, neo4j, ragas) are guarded with try/except in code.
+# =============================================================================
+
+# ── Core API ─────────────────────────────────────────────────────────────────
+fastapi>=0.111.0,<0.200.0
+uvicorn[standard]>=0.29.0,<0.300.0
+pydantic>=2.7.0,<3.0.0
+pydantic-settings>=2.3.0,<3.0.0
+python-dotenv>=1.0.1,<2.0.0
+python-multipart>=0.0.9,<0.1.0    # required for FastAPI file uploads
+
+# ── PDF Parsing ───────────────────────────────────────────────────────────────
+PyMuPDF>=1.24.0,<2.0.0             # import as `fitz`
+
+# ── Embeddings ────────────────────────────────────────────────────────────────
+sentence-transformers>=2.7.0,<4.0.0
+numpy>=1.26.0,<3.0.0
+torch>=2.2.0                        # sentence-transformers dependency; cpu-only is fine
+
+# ── Vector Store ─────────────────────────────────────────────────────────────
+scikit-learn>=1.5.0,<2.0.0          # always installed; used as FAISS fallback
+# faiss-cpu>=1.8.0                  # OPTIONAL — uncomment if your platform supports it
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+tqdm>=4.66.0,<5.0.0
+
+# ── Testing ──────────────────────────────────────────────────────────────────
+pytest>=8.2.0,<10.0.0
+pytest-asyncio>=0.23.0,<1.0.0
+httpx>=0.27.0,<1.0.0                # required by FastAPI TestClient
+
+# ── Optional: Knowledge Graph ─────────────────────────────────────────────────
+# neo4j>=5.20.0                     # OPTIONAL — uncomment if running Neo4j
+
+# ── Optional: Advanced Evaluation ────────────────────────────────────────────
+# ragas>=0.1.0                      # OPTIONAL — uncomment for RAGAS metrics
