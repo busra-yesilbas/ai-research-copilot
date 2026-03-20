@@ -132,32 +132,6 @@ cp .env.example .env
 Copy-Item .env.example .env
 ```
 
----
-
-## Configuration
-
-All settings are read from environment variables or the `.env` file.
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `APP_NAME` | `AI Research Copilot` | Application name |
-| `ENVIRONMENT` | `development` | `development` / `staging` / `production` |
-| `LOG_LEVEL` | `INFO` | `DEBUG` / `INFO` / `WARNING` / `ERROR` |
-| `LOG_FORMAT` | `text` | `text` (dev) or `json` (production / containers) |
-| `DATA_DIR` | `data` | Root directory for all data files |
-| `INDEX_DIR` | `data/index` | Vector store persistence directory |
-| `MODELS_DIR` | `models` | Sentence-transformers model cache |
-| `EMBEDDING_MODEL_NAME` | `sentence-transformers/all-MiniLM-L6-v2` | HuggingFace model id |
-| `EMBEDDING_DEVICE` | `cpu` | `cpu` / `cuda` / `mps` |
-| `CHUNK_SIZE` | `512` | Max characters per chunk |
-| `CHUNK_OVERLAP` | `64` | Overlapping characters between chunks |
-| `VECTOR_STORE_BACKEND` | `faiss` | `faiss` (requires `faiss-cpu`) or `sklearn` |
-| `RETRIEVAL_TOP_K` | `5` | Default number of retrieved chunks |
-| `LLM_PROVIDER` | `local` | `local` / `openai` / `anthropic` |
-| `NEO4J_URI` | *(None)* | Neo4j bolt URI — omit to use JSON graph backend |
-
----
-
 ## Running the API
 
 ```bash
