@@ -6,38 +6,18 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.111%2B-009688.svg)](https://fastapi.tiangolo.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
----
-
-## Table of Contents
-
-1. [Features](#features)
-2. [Architecture](#architecture)
-3. [Project Structure](#project-structure)
-4. [Installation](#installation)
-5. [Configuration](#configuration)
-6. [Running the API](#running-the-api)
-7. [CLI Usage](#cli-usage)
-8. [API Reference](#api-reference)
-9. [Running Tests](#running-tests)
-10. [Docker Setup](#docker-setup)
-11. [Evaluation](#evaluation)
-12. [Roadmap](#roadmap)
-13. [Contributing](#contributing)
-
----
-
 ## Features
 
-| Milestone | Feature | Status |
-|-----------|---------|--------|
-| M1 | FastAPI service · `/health` & `/version` · Pydantic settings · Structured JSON/text logging | ✅ Done |
-| M2 | PDF ingestion (PyMuPDF) · Section detection · Character chunker with overlap · deterministic IDs | ✅ Done |
-| M3 | Sentence-Transformers embeddings (lazy load) · FAISS + sklearn fallback · persist/load index | ✅ Done |
-| M4 | RAG pipeline · extractive answer synthesis · `POST /ask` · `POST /upload-paper` | ✅ Done |
-| M5 | Summariser, Insight, Citation agents · `/summarize` · `/research-insights` · `/related-work` | ✅ Done |
-| M6 | Evaluation harness · Recall@k · MRR · synthetic query generation · CLI | ✅ Done |
-| M7 | Knowledge graph (regex entity extraction) · Neo4j or JSON backend · `GET /graph` | ✅ Done |
-| M8 | Docker + docker-compose (API + optional Neo4j) · polished README · full test suite | ✅ Done |
+| Milestone | Feature |
+|-----------|---------|
+| M1 | FastAPI service · `/health` & `/version` · Pydantic settings · Structured JSON/text logging | 
+| M2 | PDF ingestion (PyMuPDF) · Section detection · Character chunker with overlap · deterministic IDs | 
+| M3 | Sentence-Transformers embeddings (lazy load) · FAISS + sklearn fallback · persist/load index | 
+| M4 | RAG pipeline · extractive answer synthesis · `POST /ask` · `POST /upload-paper` | 
+| M5 | Summariser, Insight, Citation agents · `/summarize` · `/research-insights` · `/related-work` | 
+| M6 | Evaluation harness · Recall@k · MRR · synthetic query generation · CLI | 
+| M7 | Knowledge graph (regex entity extraction) · Neo4j or JSON backend · `GET /graph` | 
+| M8 | Docker + docker-compose (API + optional Neo4j) · polished README · full test suite |
 
 **Key design principles:**
 - **Fully offline** — uses `sentence-transformers/all-MiniLM-L6-v2` + sklearn; zero paid API calls.
@@ -46,48 +26,6 @@
 - **Clean architecture** — strict separation: ingestion → embeddings → vector store → RAG → agents.
 - **Windows-compatible** — tested on PowerShell / Python 3.11+.
 - **Testable offline** — `FakeEmbeddingModel` enables the full test suite without any downloads.
-
----
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         AI Research Copilot                             │
-│                                                                         │
-│  ┌──────────┐   PDF    ┌───────────┐  Chunks  ┌────────────────────┐   │
-│  │  CLI /   │ ──────▶  │ Ingestion │ ───────▶ │  Embedding Model   │   │
-│  │  API     │          │  (fitz)   │          │  (SentenceTransf.) │   │
-│  └──────────┘          └───────────┘          └────────┬───────────┘   │
-│       │                                                │ vectors        │
-│       │  Query                              ┌──────────▼───────────┐   │
-│       └──────────────────────────────────▶  │   Vector Store       │   │
-│                                             │ (FAISS / sklearn)    │   │
-│                                             └──────────┬───────────┘   │
-│                                                        │ SearchResult   │
-│  ┌─────────────────────────────────────────────────────▼───────────┐   │
-│  │                      RAG Pipeline                               │   │
-│  │  Retriever ──▶ LocalAnswerGenerator (extractive / plug-in LLM) │   │
-│  └────────────────────────────┬────────────────────────────────────┘   │
-│                               │                                         │
-│           ┌───────────────────┼───────────────────┐                    │
-│           ▼                   ▼                   ▼                    │
-│    ┌─────────────┐  ┌──────────────────┐  ┌─────────────────┐         │
-│    │ Summarizer  │  │  Insight Agent   │  │ Citation Agent  │         │
-│    │   Agent     │  │ (contributions,  │  │ (related work,  │         │
-│    │             │  │  limitations,    │  │  citations)     │         │
-│    └─────────────┘  │  gaps)           │  └─────────────────┘         │
-│                     └──────────────────┘                               │
-│                                                                         │
-│  ┌───────────────────┐        ┌───────────────────────────────────┐    │
-│  │  Knowledge Graph  │        │        Evaluation Harness         │    │
-│  │ (regex entities + │        │  Recall@k · MRR · synthetic QA   │    │
-│  │  Neo4j or JSON)   │        └───────────────────────────────────┘    │
-│  └───────────────────┘                                                  │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
----
 
 ## Project Structure
 
@@ -557,29 +495,3 @@ report = evaluator.evaluate(chunks, n_queries=50, k=5)
 print(report.summary())
 # Recall@5: 0.82   MRR: 0.67
 ```
-
----
-
-## Roadmap
-
-- [ ] **M4+**: Swap `LocalAnswerGenerator` for OpenAI/Anthropic via env var
-- [ ] **M4+**: Stream answers via Server-Sent Events
-- [ ] **M5+**: Multi-paper cross-document reasoning
-- [ ] **M6+**: RAGAS integration for answer faithfulness metrics
-- [ ] **M7+**: Graph visualisation endpoint (D3.js / Cytoscape)
-- [ ] **M8+**: Async background ingestion task queue (Celery / ARQ)
-- [ ] **M8+**: Auth middleware (API keys / OAuth2)
-- [ ] **M8+**: Kubernetes Helm chart
-
----
-
-## Contributing
-
-1. Fork the repository.
-2. Create a feature branch: `git checkout -b feature/my-feature`.
-3. Make your changes with full type hints, docstrings, and tests.
-4. Run `pytest` and ensure all tests pass.
-5. Open a pull request with a clear description.
-
-Code style: follow existing patterns (PEP 8, type hints everywhere, Pydantic
-models for all data structures, `get_logger(__name__)` for logging).
