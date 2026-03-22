@@ -27,67 +27,6 @@
 - **Windows-compatible** — tested on PowerShell / Python 3.11+.
 - **Testable offline** — `FakeEmbeddingModel` enables the full test suite without any downloads.
 
-## Project Structure
-
-```
-ai-research-copilot/
-├── app/
-│   ├── api/
-│   │   ├── main.py            # FastAPI factory + lifespan
-│   │   ├── deps.py            # Dependency injection
-│   │   └── routers/
-│   │       ├── rag.py         # /upload-paper, /ask
-│   │       ├── agents.py      # /summarize, /research-insights, /related-work
-│   │       └── graph.py       # /graph, /graph/build
-│   ├── config/
-│   │   └── settings.py        # Pydantic settings (reads .env)
-│   ├── utils/
-│   │   └── logger.py          # JSON / text logging
-│   ├── ingestion/
-│   │   ├── models.py          # Document, Page, Section, Chunk Pydantic models
-│   │   ├── pdf_parser.py      # PyMuPDF parser
-│   │   └── chunking.py        # Character-based chunker with overlap
-│   ├── embeddings/
-│   │   └── embedding_model.py # BaseEmbeddingModel, EmbeddingModel, FakeEmbeddingModel
-│   ├── vector_store/
-│   │   └── faiss_store.py     # VectorStore ABC, FaissVectorStore, SklearnVectorStore
-│   ├── rag/
-│   │   ├── retriever.py       # Retriever (embed query + search store)
-│   │   └── rag_pipeline.py    # RAGPipeline, BaseAnswerGenerator, LocalAnswerGenerator
-│   ├── agents/
-│   │   ├── base_agent.py
-│   │   ├── summarizer_agent.py
-│   │   ├── insight_agent.py
-│   │   └── citation_agent.py
-│   ├── evaluation/
-│   │   └── rag_eval.py        # RagEvaluator, Recall@k, MRR
-│   └── knowledge_graph/
-│       └── graph_builder.py   # Entity extraction + Neo4j / JSON persistence
-├── scripts/
-│   ├── ingest_pdf.py          # Parse + chunk a PDF
-│   ├── build_index.py         # Build + persist vector index
-│   ├── ask_question.py        # Query the index from CLI
-│   ├── evaluate_rag.py        # Run evaluation metrics
-│   └── build_graph.py         # Build + save knowledge graph
-├── tests/
-│   ├── conftest.py
-│   ├── test_api.py
-│   ├── test_pdf_parser.py
-│   ├── test_chunking.py
-│   ├── test_embedding_model.py
-│   ├── test_vector_store.py
-│   ├── test_rag_pipeline.py
-│   └── test_agents.py
-├── docker/
-│   └── Dockerfile
-├── docker-compose.yml
-├── requirements.txt
-├── .env.example
-├── conftest.py
-├── pytest.ini
-└── README.md
-```
-
 ---
 
 ## Installation
@@ -389,22 +328,6 @@ pytest tests/test_vector_store.py tests/test_embedding_model.py -v
 # Run with coverage (requires pytest-cov)
 pytest --cov=app --cov-report=term-missing
 ```
-
-Expected summary:
-```
-tests/test_api.py             PASSED (13 M1 + 20 M4-M7 tests)
-tests/test_pdf_parser.py      PASSED (M2 — requires PyMuPDF)
-tests/test_chunking.py        PASSED (M2)
-tests/test_embedding_model.py PASSED (M3 — offline via FakeEmbeddingModel)
-tests/test_vector_store.py    PASSED (M3)
-tests/test_rag_pipeline.py    PASSED (M4)
-tests/test_agents.py          PASSED (M5)
-========================= 100+ passed =========================
-```
-
-> Tests tagged `sentence_transformers` and `faiss` are automatically skipped
-> when those packages are not installed.
-
 ---
 
 ## Docker Setup
